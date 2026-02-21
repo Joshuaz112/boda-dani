@@ -1,0 +1,74 @@
+<!--
+    pages/album.html
+    ===============================================================
+    SUBPÁGINA 2 — ÁLBUM COLABORATIVO
+    Fragmento incluido dentro del <main id="view-album"> de index.html.
+    ===============================================================
+-->
+
+<div class="max-w-7xl mx-auto px-6 py-16 md:py-24">
+
+    <!-- ── Encabezado ── -->
+    <div class="text-center mb-16 max-w-2xl mx-auto">
+
+        <h2 class="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3">Captura el momento</h2>
+        <h3 class="font-serif-elegant text-5xl md:text-6xl text-gray-800 mb-6">Álbum Compartido</h3>
+
+        <p class="text-gray-500 text-sm leading-relaxed mb-10">
+            Sube las fotos y selfies que tomes durante la boda. Queremos ver este día tan
+            especial a través de tus ojos. Puedes seleccionar varias imágenes a la vez.
+        </p>
+
+        <!-- Input de archivo oculto -->
+        <input type="file" id="file-upload" multiple accept="image/*" class="hidden"
+            aria-label="Seleccionar fotos para subir">
+
+        <button onclick="document.getElementById('file-upload').click()" id="upload-btn"
+            class="inline-flex items-center justify-center space-x-3 btn-gold px-10 py-4 rounded-full font-medium tracking-[0.1em] shadow-lg text-sm">
+            <!-- Ícono de subida -->
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <span>SUBIR FOTOS</span>
+        </button>
+
+    </div>
+
+    <!-- ── Galería masonry ── -->
+    <!--
+        Los placeholders se reemplazarán automáticamente si hay
+        fotos en Firestore. Ver js/gallery.js → loadPhotos()
+    -->
+    <div id="photo-gallery" class="masonry pb-20">
+        <!-- Placeholder 1 -->
+        <div class="photo-card">
+            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=600&q=80"
+                alt="Boda de muestra" loading="lazy">
+        </div>
+        <!-- Placeholder 2 -->
+        <div class="photo-card">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80"
+                alt="Boda de muestra" loading="lazy">
+        </div>
+        <!-- Placeholder 3 -->
+        <div class="photo-card">
+            <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80"
+                alt="Boda de muestra" loading="lazy">
+        </div>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="py-16 bg-white text-center border-t border-gray-100">
+    <p class="footer-name mb-2">Felipe &amp; Daniela</p>
+    <div class="ornament-divider mb-4">
+        <div class="line"></div>
+        <div class="diamond"></div>
+        <div class="line"></div>
+    </div>
+    <p class="text-[10px] text-gray-400 tracking-[0.25em] uppercase">
+        Gracias por ser parte de nuestra historia
+    </p>
+</footer>

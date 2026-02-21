@@ -1,0 +1,233 @@
+<!--
+    pages/home.html
+    ===============================================================
+    SUBPÁGINA 1 — LA BODA
+    Fragmento cargado dinámicamente en <main id="view-home"> de index.html.
+    ===============================================================
+-->
+
+<!-- ╔══════════════════════════════════════════════════════════
+     ║  HERO — Countdown
+     ╚══════════════════════════════════════════════════════════ -->
+<section class="hero-bg flex flex-col items-center justify-center text-white text-center px-4 min-h-[85vh]"
+    style="position:relative; padding-top: 90px;">
+    <div class="max-w-3xl mx-auto w-full">
+
+        <p class="text-xs md:text-sm mb-8 tracking-[0.35em] uppercase font-light drop-shadow-md"
+            style="color:rgba(255,255,255,0.7);">
+            Celebra con nosotros
+        </p>
+
+        <!-- Nombre hero en caligrafía Great Vibes -->
+        <h1 class="hero-script-name mb-2" style="text-shadow:0 4px 30px rgba(0,0,0,0.3);">Felipe</h1>
+        <span class="hero-ampersand">&</span>
+        <h1 class="hero-script-name mt-2 mb-6" style="text-shadow:0 4px 30px rgba(0,0,0,0.3);">Daniela</h1>
+
+        <div class="w-20 h-px mx-auto mb-6"
+            style="background:linear-gradient(90deg,transparent,var(--color-gold-light),transparent);"></div>
+
+        <p class="text-xs md:text-sm tracking-[0.25em] mb-10 font-light uppercase"
+            style="color:rgba(255,255,255,0.75);">
+            25 de Octubre, 2026 &nbsp;•&nbsp; Isla de Maipo, Chile
+        </p>
+
+        <!-- CUENTA REGRESIVA -->
+        <div class="flex space-x-4 md:space-x-10 text-center justify-center reveal reveal-delay-1">
+            <!-- Días -->
+            <div class="flex flex-col items-center">
+                <span id="days" class="font-serif-elegant text-4xl md:text-6xl drop-shadow-md"
+                    style="color:var(--color-gold-light);">00</span>
+                <span class="text-[9px] md:text-[11px] uppercase tracking-[0.25em] mt-2"
+                    style="color:rgba(255,255,255,0.65);">Días</span>
+            </div>
+            <span class="text-2xl font-light" style="color:rgba(255,255,255,0.25);">:</span>
+
+            <!-- Horas -->
+            <div class="flex flex-col items-center">
+                <span id="hours" class="font-serif-elegant text-4xl md:text-6xl drop-shadow-md"
+                    style="color:var(--color-gold-light);">00</span>
+                <span class="text-[9px] md:text-[11px] uppercase tracking-[0.25em] mt-2"
+                    style="color:rgba(255,255,255,0.65);">Horas</span>
+            </div>
+            <span class="text-2xl font-light" style="color:rgba(255,255,255,0.25);">:</span>
+
+            <!-- Minutos -->
+            <div class="flex flex-col items-center">
+                <span id="minutes" class="font-serif-elegant text-4xl md:text-6xl drop-shadow-md"
+                    style="color:var(--color-gold-light);">00</span>
+                <span class="text-[9px] md:text-[11px] uppercase tracking-[0.25em] mt-2"
+                    style="color:rgba(255,255,255,0.65);">Minutos</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Wave divider -->
+    <div class="hero-wave">
+        <svg viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,55 C200,90 400,20 600,55 C800,90 1000,25 1200,55 L1200,90 L0,90 Z" fill="#ffffff" />
+        </svg>
+    </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════
+     ║  DETALLES — Ceremonia y Recepción
+     ╚══════════════════════════════════════════════════════════ -->
+<section class="py-24 bg-white" style="position:relative;">
+    <div class="max-w-6xl mx-auto px-6">
+
+        <div class="text-center mb-16 reveal">
+            <!-- Ornamento -->
+            <div class="section-ornament">
+                <div class="ornament-line"></div>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"
+                    style="color:var(--color-gold);opacity:.8">
+                    <path d="M8 0C8 4 12 4 16 4C12 4 12 8 8 16C4 8 4 4 0 4C4 4 4 0 8 0Z" />
+                </svg>
+                <div class="ornament-line right"></div>
+            </div>
+            <p class="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3">Dónde y Cuándo</p>
+            <h3 class="font-serif-elegant text-5xl md:text-6xl text-gray-800">El Evento</h3>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl mx-auto">
+
+            <!-- Ceremonia -->
+            <div
+                class="bg-gray-50/50 p-10 rounded-2xl border border-gray-100 text-center hover:shadow-xl transition-shadow duration-300 reveal reveal-delay-1">
+                <div class="w-16 h-16 mx-auto bg-gold/10 rounded-full flex items-center justify-center mb-6 text-gold">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                    </svg>
+                </div>
+                <h4 class="font-serif-elegant text-3xl mb-2 text-gray-800">Ceremonia Religiosa</h4>
+                <p class="text-gold font-medium mb-4 text-sm tracking-widest">17:00 HRS</p>
+                <p class="text-gray-500 mb-8 font-light leading-relaxed text-sm">
+                    IEP Isla de Maipo<br>
+                    Armijo 680<br>
+                    Isla de Maipo, Región Metropolitana
+                </p>
+                <a href="https://maps.app.goo.gl/LQcxVxLWRjAid2fYA" target="_blank" rel="noopener"
+                    class="inline-block border-b border-gold text-gold text-xs uppercase tracking-[0.2em] font-medium pb-1 hover:text-gray-800 hover:border-gray-800 transition">
+                    Ver en Mapa
+                </a>
+            </div>
+
+            <!-- Recepción -->
+            <div
+                class="bg-gray-50/50 p-10 rounded-2xl border border-gray-100 text-center hover:shadow-xl transition-shadow duration-300 reveal reveal-delay-2">
+                <div class="w-16 h-16 mx-auto bg-gold/10 rounded-full flex items-center justify-center mb-6 text-gold">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                    </svg>
+                </div>
+                <h4 class="font-serif-elegant text-3xl mb-2 text-gray-800">Recepción</h4>
+                <p class="text-gold font-medium mb-4 text-sm tracking-widest">19:00 HRS</p>
+                <p class="text-gray-500 mb-8 font-light leading-relaxed text-sm">
+                    Hacienda Los Encinos<br>
+                    Camino a Chicureo Km 2.5<br>
+                    Colina, Santiago
+                </p>
+                <a href="#" target="_blank" rel="noopener"
+                    class="inline-block border-b border-gold text-gold text-xs uppercase tracking-[0.2em] font-medium pb-1 hover:text-gray-800 hover:border-gray-800 transition">
+                    Ver en Mapa
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════
+     ║  MURO DE DESEOS
+     ╚══════════════════════════════════════════════════════════ -->
+<section class="py-24 bg-gray-50 relative overflow-hidden">
+
+    <!-- Elementos decorativos difuminados -->
+    <div class="absolute top-0 left-0 w-64 h-64 bg-gold/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-2xl">
+    </div>
+    <div class="absolute bottom-0 right-0 w-80 h-80 bg-gold/5 rounded-full translate-x-1/3 translate-y-1/3 blur-2xl">
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 relative z-10">
+
+        <div class="text-center mb-12 reveal">
+            <!-- Ornamento -->
+            <div class="section-ornament">
+                <div class="ornament-line"></div>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"
+                    style="color:var(--color-gold);opacity:.8">
+                    <path d="M8 0C8 4 12 4 16 4C12 4 12 8 8 16C4 8 4 4 0 4C4 4 4 0 8 0Z" />
+                </svg>
+                <div class="ornament-line right"></div>
+            </div>
+            <h2 class="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3">Déjanos un recuerdo</h2>
+            <h3 class="font-serif-elegant text-5xl md:text-6xl text-gray-800">Muro de Deseos</h3>
+        </div>
+
+        <div class="grid md:grid-cols-5 gap-8">
+
+            <!-- FORMULARIO -->
+            <div class="md:col-span-2">
+                <div class="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100">
+                    <form id="guestbook-form" class="space-y-6" novalidate>
+
+                        <div>
+                            <label for="gb-name" class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">
+                                Tu Nombre
+                            </label>
+                            <input type="text" id="gb-name" required
+                                class="w-full border-b border-gray-200 focus:border-gold outline-none py-2 text-sm transition bg-transparent"
+                                placeholder="Ej. Familia Pérez">
+                        </div>
+
+                        <div>
+                            <label for="gb-message"
+                                class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">
+                                Mensaje
+                            </label>
+                            <textarea id="gb-message" required rows="3"
+                                class="w-full border-b border-gray-200 focus:border-gold outline-none py-2 text-sm transition resize-none bg-transparent"
+                                placeholder="Escribe tus buenos deseos..."></textarea>
+                        </div>
+
+                        <button type="submit" id="gb-submit"
+                            class="w-full bg-gray-800 text-white py-3.5 rounded-xl font-medium tracking-[0.1em] text-xs hover:bg-black transition shadow-md">
+                            PUBLICAR MENSAJE
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- LISTA DE MENSAJES (masonry) -->
+            <div class="md:col-span-3">
+                <div id="messages-container" class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                    <div class="flex items-center justify-center h-32">
+                        <p class="text-center text-gray-400 text-sm italic">
+                            Cargando mensajes...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="py-16 bg-white text-center border-t border-gray-100">
+    <p class="footer-name mb-2">Felipe &amp; Daniela</p>
+    <div class="ornament-divider mb-4">
+        <div class="line"></div>
+        <div class="diamond"></div>
+        <div class="line"></div>
+    </div>
+    <p class="text-[10px] text-gray-400 tracking-[0.25em] uppercase">
+        Gracias por ser parte de nuestra historia
+    </p>
+</footer>
