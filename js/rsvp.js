@@ -65,3 +65,6 @@ export function initRsvp() {
         }, 3000);
     };
 }
+
+// Exponer en window para navigation.js (que no es módulo ES)
+window.initRsvp = initRsvp;

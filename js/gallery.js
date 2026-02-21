@@ -295,3 +295,7 @@ export function initGallery() {
 
     loadPhotos();
 }
+
+// Exponer en window para navigation.js (que no es módulo ES)
+window.initGallery = initGallery;
+window.loadPhotos = loadPhotos;

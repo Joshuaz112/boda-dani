@@ -103,3 +103,6 @@ export function initGuestbook() {
         gbBtn.innerText = original;
     };
 }
+
+// Exponer en window para navigation.js (que no es módulo ES)
+window.initGuestbook = initGuestbook;

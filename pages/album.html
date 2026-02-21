@@ -35,27 +35,9 @@
 
     </div>
 
-    <!-- ── Galería masonry ── -->
-    <!--
-        Los placeholders se reemplazarán automáticamente si hay
-        fotos en Firestore. Ver js/gallery.js → loadPhotos()
-    -->
+    <!-- ── Galería masonry — poblada dinámicamente desde Supabase ── -->
     <div id="photo-gallery" class="masonry pb-20">
-        <!-- Placeholder 1 -->
-        <div class="photo-card">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=600&q=80"
-                alt="Boda de muestra" loading="lazy">
-        </div>
-        <!-- Placeholder 2 -->
-        <div class="photo-card">
-            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80"
-                alt="Boda de muestra" loading="lazy">
-        </div>
-        <!-- Placeholder 3 -->
-        <div class="photo-card">
-            <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80"
-                alt="Boda de muestra" loading="lazy">
-        </div>
+        <!-- gallery.js carga las fotos desde Supabase al iniciar -->
     </div>
 
 </div>
