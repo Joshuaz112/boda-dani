@@ -185,25 +185,79 @@ function renderPhotosAdmin(rows) {
     const count = document.getElementById('photo-count');
     if (count) count.innerText = rows.length;
     if (!grid) return;
+
     if (!rows.length) {
-        grid.innerHTML = '<p class="text-white/30 text-sm italic col-span-full text-center py-8">Sin fotos aún.</p>';
+        grid.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:40px 20px;">
+                <svg style="width:48px;height:48px;opacity:.2;color:var(--color-gold);margin:0 auto 12px;display:block;"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                    <rect x="3" y="3" width="18" height="18" rx="3"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <p class="text-white/30 text-sm italic">Sin fotos aún.</p>
+            </div>`;
+        // Limpiar manejador previo
+        grid.onclick = null;
         return;
     }
-    grid.innerHTML = rows.map(d => `
-        <div class="admin-photo-item">
-            <img src="${escapeHtml(d.url)}" loading="lazy">
-            <button class="photo-delete-btn" onclick="deletePhoto(${d.id}, '${escapeHtml(d.url)}')">✕</button>
-        </div>`).join('');
+
+    grid.innerHTML = rows.map(d => {
+        const fecha = d.created_at
+            ? new Date(d.created_at).toLocaleDateString('es-CL', { day: '2-digit', month: 'short' })
+            : '';
+        return `
+        <div class="admin-photo-item" data-photo-id="${d.id}" data-photo-url="${d.url}">
+            <img src="${d.url}" loading="lazy" alt="Foto boda">
+            <div class="photo-card-overlay">
+                <span class="photo-date">${fecha}</span>
+                <button class="photo-delete-btn js-delete-photo" title="Eliminar foto">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
+                        <path d="M9 6V4h6v2"/>
+                    </svg>
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+
+    // Event delegation — un solo listener en el grid
+    grid.onclick = async (e) => {
+        const btn = e.target.closest('.js-delete-photo');
+        if (!btn) return;
+        const card = btn.closest('.admin-photo-item');
+        const id = Number(card.dataset.photoId);
+        const url = card.dataset.photoUrl;
+        if (!confirm('¿Eliminar esta foto del álbum?')) return;
+        card.style.opacity = '0.4';
+        card.style.pointerEvents = 'none';
+        await _deletePhotoById(id, url);
+        await loadPhotosAdmin();
+        renderDashboard();
+    };
 }
 
+async function _deletePhotoById(id, url) {
+    // Extraer nombre del archivo del URL público
+    try {
+        // URL típica: https://xxx.supabase.co/storage/v1/object/public/album/FILENAME.jpg
+        const parts = new URL(url).pathname.split('/');
+        const fileName = parts[parts.length - 1];
+        const { error: storageErr } = await supabase.storage
+            .from(STORAGE_BUCKET)
+            .remove([fileName]);
+        if (storageErr) console.warn('[admin] Storage remove:', storageErr.message);
+    } catch (e) {
+        console.warn('[admin] No se pudo borrar del storage:', e);
+    }
+    await supabase.from(PHOTOS_TABLE).delete().eq('id', id);
+}
+
+// Mantener compatibilidad por si algo llama window.deletePhoto
 window.deletePhoto = async function (id, url) {
     if (!confirm('¿Eliminar esta foto?')) return;
-    // Extraer filename del Storage del URL público
-    try {
-        const fileName = url.split('/').pop();
-        await supabase.storage.from(STORAGE_BUCKET).remove([fileName]);
-    } catch (_) { /* si falla el storage igual borramos la fila */ }
-    await supabase.from(PHOTOS_TABLE).delete().eq('id', id);
+    await _deletePhotoById(id, url);
     await loadPhotosAdmin();
     renderDashboard();
 };

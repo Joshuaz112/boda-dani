@@ -67,21 +67,31 @@ async function uploadPhoto(file) {
     const blob = await compressImage(file);
     const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.jpg`;
 
+    console.log('[gallery] Subiendo:', fileName, `${(blob.size / 1024).toFixed(1)} KB`);
+
     const { error: uploadError } = await supabase.storage
         .from(BUCKET)
         .upload(fileName, blob, { contentType: 'image/jpeg', upsert: false });
 
-    if (uploadError) throw uploadError;
+    if (uploadError) {
+        console.error('[gallery] ❌ Error Storage:', uploadError.statusCode, uploadError.message, uploadError.error);
+        throw new Error(`Storage (${uploadError.statusCode}): ${uploadError.message}`);
+    }
 
     const { data: { publicUrl } } = supabase.storage
         .from(BUCKET)
         .getPublicUrl(fileName);
 
+    console.log('[gallery] ✅ URL pública:', publicUrl);
+
     const { error: dbError } = await supabase
         .from(TABLE)
         .insert({ url: publicUrl });
 
-    if (dbError) throw dbError;
+    if (dbError) {
+        console.error('[gallery] ❌ Error tabla:', dbError.message, dbError.details);
+        throw new Error(`DB: ${dbError.message}`);
+    }
 
     return publicUrl;
 }
