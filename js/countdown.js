@@ -1,7 +1,7 @@
 /**
  * countdown.js
  * Cuenta regresiva hasta la fecha de la boda.
- * Expone `initCountdown()` para ser llamado desde navigation.js
+ * Expone `window.initCountdown()` para ser llamado desde navigation.js
  * una vez que pages/home.html haya sido inyectado en el DOM.
  */
 
@@ -14,9 +14,10 @@ function updateCountdown() {
     const elDays = document.getElementById('days');
     const elHours = document.getElementById('hours');
     const elMinutes = document.getElementById('minutes');
+    const elSeconds = document.getElementById('seconds');
 
     // Si los elementos aún no están en el DOM, salir silenciosamente
-    if (!elDays || !elHours || !elMinutes) return;
+    if (!elDays || !elHours || !elMinutes || !elSeconds) return;
 
     const now = Date.now();
     const gap = WEDDING_DATE - now;
@@ -25,6 +26,7 @@ function updateCountdown() {
         elDays.innerText = '00';
         elHours.innerText = '00';
         elMinutes.innerText = '00';
+        elSeconds.innerText = '00';
         clearInterval(countdownInterval);
         return;
     }
@@ -32,10 +34,12 @@ function updateCountdown() {
     const days = Math.floor(gap / 86_400_000);
     const hours = Math.floor((gap % 86_400_000) / 3_600_000);
     const minutes = Math.floor((gap % 3_600_000) / 60_000);
+    const seconds = Math.floor((gap % 60_000) / 1_000);
 
     elDays.innerText = String(days).padStart(2, '0');
     elHours.innerText = String(hours).padStart(2, '0');
     elMinutes.innerText = String(minutes).padStart(2, '0');
+    elSeconds.innerText = String(seconds).padStart(2, '0');
 }
 
 /**
