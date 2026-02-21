@@ -1,59 +1,60 @@
 /**
- * rsvp.js
- * Formulario de confirmación de asistencia (RSVP).
- * Guarda los datos en Firestore bajo la colección 'rsvps'.
+ * rsvp.js  —  Formulario RSVP con Supabase
+ *
+ * Tabla requerida en Supabase (SQL):
+ *   create table rsvps (
+ *     id         bigint generated always as identity primary key,
+ *     name       text    not null,
+ *     attendance text    not null,   -- 'si' | 'no'
+ *     guests     int     default 1,
+ *     notes      text,
+ *     created_at timestamptz default now()
+ *   );
+ *   alter table rsvps enable row level security;
+ *   create policy "public read"  on rsvps for select using (true);
+ *   create policy "public write" on rsvps for insert with check (true);
  */
 
-import { db, APP_ID, currentUser } from './firebase.js';
-import {
-    collection,
-    addDoc,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { supabase } from './supabase.js';
+
+const TABLE = 'rsvps';
 
 // ──────────────────────────────────────────────────────────────
-// Referencia a la colección
+// Inicialización — llamado desde navigation.js → onInvitationLoaded()
 // ──────────────────────────────────────────────────────────────
-const getRsvpCol = () =>
-    collection(db, 'artifacts', APP_ID, 'public', 'data', 'rsvps');
+export function initRsvp() {
+    const rsvpForm = document.getElementById('rsvp-form');
+    const rsvpBtn = document.getElementById('rsvp-submit');
+    if (!rsvpForm) return;
 
-// ──────────────────────────────────────────────────────────────
-// Manejo del formulario
-// ──────────────────────────────────────────────────────────────
-const rsvpForm = document.getElementById('rsvp-form');
-const rsvpBtn = document.getElementById('rsvp-submit');
+    // Evitar doble binding
+    rsvpForm.onsubmit = async (e) => {
+        e.preventDefault();
 
-rsvpForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
+        const name = document.getElementById('rsvp-name')?.value.trim();
+        const attendance = document.querySelector('input[name="attendance"]:checked')?.value || 'si';
+        const guests = parseInt(document.getElementById('rsvp-guests')?.value || '1', 10);
+        const notes = document.getElementById('rsvp-notes')?.value.trim() || '';
 
-    if (!currentUser) {
-        alert('Conectando con el servidor, intenta de nuevo en unos segundos...');
-        return;
-    }
+        if (!name) return;
 
-    // Leer valores del formulario
-    const name = document.getElementById('rsvp-name').value.trim();
-    const attendance = document.querySelector('input[name="attendance"]:checked')?.value || 'si';
-    const guests = document.getElementById('rsvp-guests').value;
-    const notes = document.getElementById('rsvp-notes').value.trim();
+        rsvpBtn.disabled = true;
+        rsvpBtn.innerText = 'PROCESANDO...';
 
-    if (!name) return;
+        const { error } = await supabase
+            .from(TABLE)
+            .insert({ name, attendance, guests, notes });
 
-    // Estado de carga
-    rsvpBtn.disabled = true;
-    rsvpBtn.innerText = 'PROCESANDO...';
+        if (error) {
+            console.error('Error al enviar RSVP:', error.message);
+            alert('Hubo un error al enviar tu confirmación. Por favor intenta más tarde.');
+            rsvpBtn.disabled = false;
+            rsvpBtn.innerText = 'CONFIRMAR ASISTENCIA';
+            return;
+        }
 
-    try {
-        await addDoc(getRsvpCol(), {
-            name,
-            attendance,
-            guests: parseInt(guests, 10),
-            notes,
-            createdAt: serverTimestamp()
-        });
-
-        // Éxito visual
-        rsvpBtn.style.backgroundColor = '#10B981'; // Verde
+        // Feedback visual de éxito
+        rsvpBtn.style.backgroundColor = '#10B981';
         rsvpBtn.innerText = '¡CONFIRMACIÓN ENVIADA!';
 
         setTimeout(() => {
@@ -62,11 +63,5 @@ rsvpForm?.addEventListener('submit', async (e) => {
             rsvpBtn.innerText = 'CONFIRMAR ASISTENCIA';
             rsvpBtn.disabled = false;
         }, 3000);
-
-    } catch (err) {
-        console.error('Error al enviar RSVP:', err);
-        alert('Hubo un error al enviar tu confirmación. Por favor intenta más tarde.');
-        rsvpBtn.disabled = false;
-        rsvpBtn.innerText = 'CONFIRMAR ASISTENCIA';
-    }
-});
+    };
+}

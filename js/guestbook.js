@@ -1,29 +1,30 @@
 /**
- * guestbook.js
- * Muro de deseos:
- *  - Envío de mensajes a Firestore
- *  - Escucha en tiempo real y renderizado de mensajes
+ * guestbook.js  —  Muro de Deseos con Supabase
+ *
+ * Tabla requerida en Supabase (SQL):
+ *   create table guestbook (
+ *     id         bigint generated always as identity primary key,
+ *     name       text      not null,
+ *     message    text      not null,
+ *     created_at timestamptz default now()
+ *   );
+ *   alter table guestbook enable row level security;
+ *   create policy "public read"  on guestbook for select using (true);
+ *   create policy "public write" on guestbook for insert with check (true);
  */
 
-import { db, APP_ID, currentUser } from './firebase.js';
-import {
-    collection,
-    addDoc,
-    serverTimestamp,
-    onSnapshot,
-    query,
-    orderBy
-} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { supabase } from './supabase.js';
+
+const TABLE = 'guestbook';
 
 // ──────────────────────────────────────────────────────────────
-// Referencia a la colección en Firestore
+// Helpers
 // ──────────────────────────────────────────────────────────────
-const getGuestbookCol = () =>
-    collection(db, 'artifacts', APP_ID, 'public', 'data', 'guestbook');
+function escapeHtml(text) {
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return String(text || '').replace(/[&<>"']/g, m => map[m]);
+}
 
-// ──────────────────────────────────────────────────────────────
-// Renderizar un mensaje individual
-// ──────────────────────────────────────────────────────────────
 function renderMessage(data) {
     const div = document.createElement('div');
     div.className = 'bg-white p-5 rounded-xl shadow-sm border border-gray-100';
@@ -34,80 +35,71 @@ function renderMessage(data) {
     return div;
 }
 
-/** Escapa caracteres especiales para evitar XSS. */
-function escapeHtml(text) {
-    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-    return String(text).replace(/[&<>"']/g, m => map[m]);
-}
-
 // ──────────────────────────────────────────────────────────────
-// Cargar y escuchar mensajes en tiempo real
+// Cargar mensajes
 // ──────────────────────────────────────────────────────────────
-export function loadGuestbook() {
+export async function loadGuestbook() {
     const container = document.getElementById('messages-container');
     if (!container) return;
 
-    const q = query(getGuestbookCol(), orderBy('createdAt', 'desc'));
+    const { data, error } = await supabase
+        .from(TABLE)
+        .select('name, message, created_at')
+        .order('created_at', { ascending: false });
 
-    onSnapshot(q, (snapshot) => {
-        container.innerHTML = '';
-
-        if (snapshot.empty) {
-            container.innerHTML = `
-                <div class="flex items-center justify-center h-full">
-                    <p class="text-center text-gray-400 text-sm italic">Sé el primero en dejar un deseo.</p>
-                </div>`;
-            return;
-        }
-
-        snapshot.forEach(doc => {
-            container.appendChild(renderMessage(doc.data()));
-        });
-    }, (error) => {
-        console.error('Error al cargar el muro de deseos:', error);
-    });
-}
-
-// ──────────────────────────────────────────────────────────────
-// Enviar mensaje
-// ──────────────────────────────────────────────────────────────
-const form = document.getElementById('guestbook-form');
-const gbBtn = document.getElementById('gb-submit');
-
-form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // currentUser puede ser null si Firebase aún no autenticó
-    if (!currentUser) {
-        alert('Conectando con el servidor, intenta de nuevo en unos segundos...');
+    if (error) {
+        console.error('Error al cargar mensajes:', error.message);
         return;
     }
 
-    const name = document.getElementById('gb-name').value.trim();
-    const message = document.getElementById('gb-message').value.trim();
-    if (!name || !message) return;
+    container.innerHTML = '';
 
-    const originalText = gbBtn.innerText;
-    gbBtn.disabled = true;
-    gbBtn.innerText = 'ENVIANDO...';
-
-    try {
-        await addDoc(getGuestbookCol(), {
-            name,
-            message,
-            createdAt: serverTimestamp()
-        });
-        e.target.reset();
-    } catch (err) {
-        console.error('Error al enviar mensaje:', err);
-        alert('Hubo un error al enviar tu mensaje. Intenta de nuevo.');
-    } finally {
-        gbBtn.disabled = false;
-        gbBtn.innerText = originalText;
+    if (!data || data.length === 0) {
+        container.innerHTML = `
+            <div class="flex items-center justify-center h-32">
+                <p class="text-center text-gray-400 text-sm italic">Sé el primero en dejar un deseo.</p>
+            </div>`;
+        return;
     }
-});
 
-// Iniciar escucha cuando Firebase esté listo
-document.addEventListener('firebase:ready', () => {
+    data.forEach(row => container.appendChild(renderMessage(row)));
+}
+
+// ──────────────────────────────────────────────────────────────
+// Inicialización — llamado desde navigation.js → onHomeLoaded()
+// ──────────────────────────────────────────────────────────────
+export function initGuestbook() {
+    // Cargar mensajes existentes
     loadGuestbook();
-});
+
+    // Manejar envío del formulario
+    const form = document.getElementById('guestbook-form');
+    const gbBtn = document.getElementById('gb-submit');
+    if (!form) return;
+
+    // Evitar doble binding si se llama varias veces
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('gb-name')?.value.trim();
+        const message = document.getElementById('gb-message')?.value.trim();
+        if (!name || !message) return;
+
+        const original = gbBtn.innerText;
+        gbBtn.disabled = true;
+        gbBtn.innerText = 'ENVIANDO...';
+
+        const { error } = await supabase.from(TABLE).insert({ name, message });
+
+        if (error) {
+            console.error('Error al enviar mensaje:', error.message);
+            alert('Hubo un error al enviar tu mensaje. Intenta de nuevo.');
+        } else {
+            form.reset();
+            await loadGuestbook();
+        }
+
+        gbBtn.disabled = false;
+        gbBtn.innerText = original;
+    };
+}
