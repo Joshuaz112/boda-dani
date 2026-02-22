@@ -94,13 +94,16 @@
     <nav id="main-nav" class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm
             transition-transform duration-300 transform translate-y-[-100%]">
 
-        <div class="max-w-6xl mx-auto px-6 h-[70px] flex justify-between items-center">
+        <div class="max-w-6xl mx-auto px-6 h-[70px] flex justify-between items-center relative">
+
 
             <!-- Logo / Monograma -->
-            <span class="font-serif-elegant text-3xl text-gold cursor-pointer" onclick="switchView('home')"
-                role="button" aria-label="Inicio">
+            <span class="font-serif-elegant text-3xl text-gold cursor-pointer
+                         absolute left-1/2 -translate-x-1/2
+                         md:static md:translate-x-0" onclick="switchView('home')" role="button" aria-label="Inicio">
                 F &amp; D
             </span>
+
 
             <!-- ── Menú escritorio ── -->
             <div class="hidden md:flex space-x-10 text-xs uppercase tracking-[0.2em] font-medium items-center h-full">
@@ -131,11 +134,7 @@
                 </button>
             </div>
 
-            <!-- ── Controles móviles ── (solo se muestran en ≥ md) -->
-            <div class="md:hidden flex items-center">
-                <!-- Hamburguesa oculta en móvil (bottom-nav cubre navegación) -->
-                <!-- En escritorio este bloque no aparece; en móvil no hay hamburguesa -->
-            </div>
+
 
         </div><!-- /contenedor nav -->
 
@@ -150,11 +149,11 @@
      ════════════════════════════════════════════════════════ -->
     <button id="music-fab" class="music-fab" title="Reproducir / Pausar música" aria-label="Música">
         <!-- Ícono nota musical (cuando está pausada) -->
-        <svg id="fab-icon-note" class="fab-icon" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M9 18V5l12-2v13"/>
-            <circle cx="6" cy="18" r="3"/>
-            <circle cx="18" cy="16" r="3"/>
+        <svg id="fab-icon-note" class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.8" stroke-linecap="round">
+            <path d="M9 18V5l12-2v13" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="16" r="3" />
         </svg>
         <!-- Barras de música (cuando está reproduciendo) -->
         <div id="fab-music-bars" class="fab-bars hidden">
@@ -193,6 +192,16 @@
             <span>RSVP</span>
         </button>
     </nav>
+
+    <!-- ════════════════════════════════════════════════════════
+     BOTÓN VOLVER ARRIBA
+     ════════════════════════════════════════════════════════ -->
+    <button id="back-to-top" title="Volver al inicio" aria-label="Volver arriba"
+        onclick="document.querySelector('.view-section.active')?.scrollTo({top:0,behavior:'smooth'})">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="18 15 12 9 6 15"/>
+        </svg>
+    </button>
 
 
     <!-- ════════════════════════════════════════════════════════

@@ -122,6 +122,16 @@ window.switchView = async function (viewId) {
 // ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadPage('home');
+
+    // Back-to-top: escuchar scroll en todas las view-sections
+    const backToTop = document.getElementById('back-to-top');
+    if (backToTop) {
+        document.querySelectorAll('.view-section').forEach(section => {
+            section.addEventListener('scroll', () => {
+                backToTop.classList.toggle('visible', section.scrollTop > 300);
+            }, { passive: true });
+        });
+    }
 });
 
 // ──────────────────────────────────────────────────────────────

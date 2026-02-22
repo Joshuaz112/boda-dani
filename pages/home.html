@@ -102,53 +102,122 @@
 
         <div class="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl mx-auto">
 
-            <!-- Ceremonia -->
+            <!-- Ceremonia — con acordeón en móvil -->
             <div
-                class="bg-gray-50/50 p-10 rounded-2xl border border-gray-100 text-center hover:shadow-xl transition-shadow duration-300 reveal reveal-delay-1">
-                <div class="w-16 h-16 mx-auto bg-gold/10 rounded-full flex items-center justify-center mb-6 text-gold">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                    </svg>
+                class="event-card bg-gray-50/50 rounded-2xl border border-gray-100 hover:shadow-xl transition-shadow duration-300 reveal reveal-delay-1 overflow-hidden">
+                <!-- Header clicable (solo activo en móvil) -->
+                <button class="event-card-header w-full text-center p-8 md:p-10 md:cursor-default"
+                    onclick="toggleEventCard(this)" aria-expanded="true">
+                    <div
+                        class="w-16 h-16 mx-auto bg-gold/10 rounded-full flex items-center justify-center mb-4 text-gold">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-serif-elegant text-3xl mb-1 text-gray-800">Ceremonia Religiosa</h4>
+                    <p class="text-gold font-medium text-sm tracking-widest">17:00 HRS</p>
+                    <!-- Chevron solo visible en móvil -->
+                    <span class="event-card-chevron md:hidden">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                    </span>
+                </button>
+                <!-- Cuerpo colapsable -->
+                <div class="event-card-body px-8 pb-8 md:px-10 md:pb-10">
+                    <p class="text-gray-500 mb-8 font-light leading-relaxed text-sm text-center">
+                        IEP Isla de Maipo<br>
+                        Armijo 680<br>
+                        Isla de Maipo, Región Metropolitana
+                    </p>
+                    <div class="text-center">
+                        <a href="https://maps.app.goo.gl/LQcxVxLWRjAid2fYA" target="_blank" rel="noopener"
+                            class="inline-block border-b border-gold text-gold text-xs uppercase tracking-[0.2em] font-medium pb-1 hover:text-gray-800 hover:border-gray-800 transition">
+                            Ver en Mapa
+                        </a>
+                    </div>
                 </div>
-                <h4 class="font-serif-elegant text-3xl mb-2 text-gray-800">Ceremonia Religiosa</h4>
-                <p class="text-gold font-medium mb-4 text-sm tracking-widest">17:00 HRS</p>
-                <p class="text-gray-500 mb-8 font-light leading-relaxed text-sm">
-                    IEP Isla de Maipo<br>
-                    Armijo 680<br>
-                    Isla de Maipo, Región Metropolitana
-                </p>
-                <a href="https://maps.app.goo.gl/LQcxVxLWRjAid2fYA" target="_blank" rel="noopener"
-                    class="inline-block border-b border-gold text-gold text-xs uppercase tracking-[0.2em] font-medium pb-1 hover:text-gray-800 hover:border-gray-800 transition">
-                    Ver en Mapa
-                </a>
             </div>
 
-            <!-- Recepción -->
+            <!-- Recepción — con acordeón en móvil -->
             <div
-                class="bg-gray-50/50 p-10 rounded-2xl border border-gray-100 text-center hover:shadow-xl transition-shadow duration-300 reveal reveal-delay-2">
-                <div class="w-16 h-16 mx-auto bg-gold/10 rounded-full flex items-center justify-center mb-6 text-gold">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
-                    </svg>
+                class="event-card bg-gray-50/50 rounded-2xl border border-gray-100 hover:shadow-xl transition-shadow duration-300 reveal reveal-delay-2 overflow-hidden">
+                <button class="event-card-header w-full text-center p-8 md:p-10 md:cursor-default"
+                    onclick="toggleEventCard(this)" aria-expanded="true">
+                    <div
+                        class="w-16 h-16 mx-auto bg-gold/10 rounded-full flex items-center justify-center mb-4 text-gold">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-serif-elegant text-3xl mb-1 text-gray-800">Recepción</h4>
+                    <p class="text-gold font-medium text-sm tracking-widest">19:00 HRS</p>
+                    <span class="event-card-chevron md:hidden">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                    </span>
+                </button>
+                <div class="event-card-body px-8 pb-8 md:px-10 md:pb-10">
+                    <p class="text-gray-500 mb-8 font-light leading-relaxed text-sm text-center">
+                        Hacienda Los Encinos<br>
+                        Camino a Chicureo Km 2.5<br>
+                        Colina, Santiago
+                    </p>
+                    <div class="text-center">
+                        <a href="#" target="_blank" rel="noopener"
+                            class="inline-block border-b border-gold text-gold text-xs uppercase tracking-[0.2em] font-medium pb-1 hover:text-gray-800 hover:border-gray-800 transition">
+                            Ver en Mapa
+                        </a>
+                    </div>
                 </div>
-                <h4 class="font-serif-elegant text-3xl mb-2 text-gray-800">Recepción</h4>
-                <p class="text-gold font-medium mb-4 text-sm tracking-widest">19:00 HRS</p>
-                <p class="text-gray-500 mb-8 font-light leading-relaxed text-sm">
-                    Hacienda Los Encinos<br>
-                    Camino a Chicureo Km 2.5<br>
-                    Colina, Santiago
-                </p>
-                <a href="#" target="_blank" rel="noopener"
-                    class="inline-block border-b border-gold text-gold text-xs uppercase tracking-[0.2em] font-medium pb-1 hover:text-gray-800 hover:border-gray-800 transition">
-                    Ver en Mapa
-                </a>
             </div>
 
         </div>
     </div>
 </section>
+
+<script>
+    function toggleEventCard(btn) {
+        // En desktop no colapsar
+        if (window.innerWidth >= 768) return;
+        const body = btn.nextElementSibling;
+        const chevron = btn.querySelector('.event-card-chevron');
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', !expanded);
+        if (expanded) {
+            body.style.maxHeight = body.scrollHeight + 'px';
+            requestAnimationFrame(() => { body.style.maxHeight = '0'; body.style.opacity = '0'; });
+            chevron?.classList.add('rotated');
+        } else {
+            body.style.maxHeight = '0';
+            body.style.opacity = '0';
+            requestAnimationFrame(() => { body.style.maxHeight = body.scrollHeight + 'px'; body.style.opacity = '1'; });
+            chevron?.classList.remove('rotated');
+        }
+    }
+    // Inicializar: en móvil arrancar colapsados (excepto el primero)
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.innerWidth < 768) {
+            document.querySelectorAll('.event-card-body').forEach((body, i) => {
+                if (i === 0) { body.style.maxHeight = body.scrollHeight + 'px'; return; }
+                body.style.maxHeight = '0';
+                body.style.opacity = '0';
+                const btn = body.previousElementSibling;
+                btn?.setAttribute('aria-expanded', 'false');
+                btn?.querySelector('.event-card-chevron')?.classList.add('rotated');
+            });
+        }
+    });
+</script>
+
+
+
+
 
 
 <!-- ╔══════════════════════════════════════════════════════════

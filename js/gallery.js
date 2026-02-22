@@ -198,7 +198,16 @@ function renderLightbox(lb) {
 
     // Clic en fondo cierra
     lb.addEventListener('click', e => { if (e.target === lb) { lb.remove(); document.onkeydown = null; } });
+
+    // ── Swipe en móvil ──────────────────────────────────────
+    let _touchX = 0;
+    lb.addEventListener('touchstart', e => { _touchX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', e => {
+        const diff = _touchX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) navigateLightbox(lb, diff > 0 ? 1 : -1);
+    }, { passive: true });
 }
+
 
 
 function navigateLightbox(lb, dir) {
@@ -294,7 +303,30 @@ export async function loadPhotos() {
     data.forEach((row, i) => {
         gallery.appendChild(createPhotoCard(row.url, i));
     });
+
+    // ── Badge en bottom nav ──────────────────────────────────
+    _updateAlbumBadge(data.length);
 }
+
+/** Actualiza (o crea) el badge de conteo en el botón de Álbum del bottom nav */
+function _updateAlbumBadge(count) {
+    const albumBtn = document.querySelector('.bottom-nav-item[data-view="album"]');
+    if (!albumBtn) return;
+    let badge = albumBtn.querySelector('.nav-badge');
+    if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'nav-badge';
+        albumBtn.style.position = 'relative';
+        albumBtn.appendChild(badge);
+    }
+    if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
 
 // ──────────────────────────────────────────────────────────────
 // 7. Inicialización — llamado desde navigation.js → onAlbumLoaded()
