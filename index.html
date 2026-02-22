@@ -96,17 +96,16 @@
 
         <div class="max-w-6xl mx-auto px-6 h-[70px] flex justify-between items-center relative">
 
-
-            <!-- Logo / Monograma -->
+            <!-- Logo / Monograma → centrado en móvil, izquierda en desktop -->
             <span class="font-serif-elegant text-3xl text-gold cursor-pointer
                          absolute left-1/2 -translate-x-1/2
                          md:static md:translate-x-0" onclick="switchView('home')" role="button" aria-label="Inicio">
                 F &amp; D
             </span>
 
-
             <!-- ── Menú escritorio ── -->
-            <div class="hidden md:flex space-x-10 text-xs uppercase tracking-[0.2em] font-medium items-center h-full">
+            <div
+                class="hidden md:flex space-x-10 text-xs uppercase tracking-[0.2em] font-medium items-center h-full ml-auto">
 
                 <button onclick="switchView('home')" class="nav-link active h-full flex items-center"
                     data-target="home">
@@ -134,9 +133,8 @@
                 </button>
             </div>
 
-
-
         </div><!-- /contenedor nav -->
+
 
         <!-- Menú desplegable móvil (ya no se usa en mobile, mantenido por compatibilidad) -->
         <div id="mobile-menu" class="hidden">
@@ -199,7 +197,7 @@
     <button id="back-to-top" title="Volver al inicio" aria-label="Volver arriba"
         onclick="document.querySelector('.view-section.active')?.scrollTo({top:0,behavior:'smooth'})">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="18 15 12 9 6 15"/>
+            <polyline points="18 15 12 9 6 15" />
         </svg>
     </button>
 

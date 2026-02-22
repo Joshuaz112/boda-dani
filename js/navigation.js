@@ -115,13 +115,27 @@ window.switchView = async function (viewId) {
     });
 
     targetView.scrollTo(0, 0);
+
+    // Actualizar hash en URL sin recargar para compartir enlace
+    if (window.location.hash !== `#${viewId}`) {
+        history.pushState(null, '', `#${viewId}`);
+    }
+
 };
 
 // ──────────────────────────────────────────────────────────────
-// 3. Carga inicial
+// 3. Carga inicial + enrutamiento por URL
 // ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    loadPage('home');
+    // Leer vista desde URL: ?view=album  o  #album
+    const params = new URLSearchParams(window.location.search);
+    const hashView = window.location.hash.replace('#', '');
+    const VALID = ['home', 'album', 'invitation'];
+    const startView = VALID.includes(params.get('view')) ? params.get('view')
+        : VALID.includes(hashView) ? hashView
+            : 'home';
+
+    loadPage(startView).then(() => switchView(startView));
 
     // Back-to-top: escuchar scroll en todas las view-sections
     const backToTop = document.getElementById('back-to-top');
