@@ -71,9 +71,9 @@
             <form id="rsvp-form" class="space-y-6" novalidate>
 
                 <!-- Nombre -->
-                <div>
-                    <input type="text" id="rsvp-name" required placeholder="Nombre completo (Familia o Acompañantes)"
-                        class="w-full border-b border-gray-300 focus:border-gold outline-none py-2 text-sm transition bg-transparent">
+                <div class="floating-input-group">
+                    <input type="text" id="rsvp-name" required placeholder=" " class="floating-input">
+                    <label for="rsvp-name" class="floating-label">Nombre completo (Familia o Acompañantes)</label>
                 </div>
 
                 <!-- ¿Asistirán? -->
@@ -103,25 +103,22 @@
                 </div>
 
                 <!-- Número de pases -->
-                <div>
-                    <label for="rsvp-guests"
-                        class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
-                        Número de Pases Confirmados
-                    </label>
-                    <select id="rsvp-guests"
-                        class="w-full border-b border-gray-300 focus:border-gold outline-none py-2 text-sm bg-transparent transition">
-                        <option value="1">1 Persona</option>
+                <div class="floating-input-group mt-6">
+                    <select id="rsvp-guests" class="floating-select" required>
+                        <option value="1" selected>1 Persona</option>
                         <option value="2">2 Personas</option>
                         <option value="3">3 Personas</option>
                         <option value="4">4 Personas</option>
                         <option value="5">5 Personas</option>
                     </select>
+                    <label for="rsvp-guests" class="floating-label">Número de Pases Confirmados</label>
                 </div>
 
                 <!-- Notas -->
-                <div>
-                    <input type="text" id="rsvp-notes" placeholder="Notas especiales (Alergias, menú vegetariano...)"
-                        class="w-full border-b border-gray-300 focus:border-gold outline-none py-2 text-sm transition bg-transparent">
+                <div class="floating-input-group mt-6">
+                    <input type="text" id="rsvp-notes" class="floating-input" placeholder=" ">
+                    <label for="rsvp-notes" class="floating-label">Notas especiales (Alergias, menú
+                        vegetariano...)</label>
                 </div>
 
                 <button type="submit" id="rsvp-submit"

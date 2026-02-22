@@ -127,6 +127,15 @@ window.switchView = async function (viewId) {
 // 3. Carga inicial + enrutamiento por URL
 // ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+    // Manejo de Preloader
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        setTimeout(() => {
+            preloader.style.opacity = '0';
+            setTimeout(() => preloader.remove(), 1000);
+        }, 1800);
+    }
+
     // Leer vista desde URL: ?view=album  o  #album
     const params = new URLSearchParams(window.location.search);
     const hashView = window.location.hash.replace('#', '');

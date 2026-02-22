@@ -140,7 +140,14 @@ function renderLightbox(lb) {
             </svg>
         </button>` : ''}
 
-        <img src="${url}" alt="Foto boda Felipe & Daniela">
+        <!-- Contenedor relativo de imagen para la animación de likes -->
+        <div class="lb-image-container relative flex items-center justify-center">
+            <img src="${url}" alt="Foto boda Felipe & Daniela" class="js-lb-img">
+            <!-- Corazón de doble tap -->
+            <svg class="like-heart-anim" viewBox="0 0 24 24" fill="currentColor" width="80" height="80">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </div>
 
         <!-- Barra inferior: contador + acciones -->
         <div class="lb-bottom-bar">
@@ -206,6 +213,29 @@ function renderLightbox(lb) {
         const diff = _touchX - e.changedTouches[0].clientX;
         if (Math.abs(diff) > 50) navigateLightbox(lb, diff > 0 ? 1 : -1);
     }, { passive: true });
+
+    // ── Double Tap Heart (Instagram style) ──────────────────
+    const imgContainer = lb.querySelector('.lb-image-container');
+    const heartAnim = lb.querySelector('.like-heart-anim');
+    let lastTap = 0;
+
+    const triggerHeart = (e) => {
+        e.preventDefault();
+        heartAnim.classList.remove('active');
+        void heartAnim.offsetWidth; // trigger reflow
+        heartAnim.classList.add('active');
+        window.showToast?.('¡Te gustó esta foto! ❤️', 'success', 2000); // Opcional
+    };
+
+    imgContainer.addEventListener('dblclick', triggerHeart);
+    imgContainer.addEventListener('touchend', (e) => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+        if (tapLength < 300 && tapLength > 0) {
+            triggerHeart(e);
+        }
+        lastTap = currentTime;
+    });
 }
 
 

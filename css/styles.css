@@ -292,7 +292,13 @@ body {
     background-attachment: fixed;
     position: relative;
     padding-bottom: 110px;
-    /* espacio para que el wave no tape el countdown */
+}
+
+/* Fix CSS parallax para iOS: bg-fixed rompe el tamaño en Safari Mobile */
+@supports (-webkit-touch-callout: none) {
+    .hero-bg {
+        background-attachment: scroll;
+    }
 }
 
 /* Wave divider al fondo del hero */
@@ -1289,10 +1295,6 @@ select:focus {
     }
 }
 
-.hidden {
-    display: none !important;
-}
-
 /* ============================================================
    ACORDEÓN — Event cards (mobile collapsible)
    ============================================================ */
@@ -1304,8 +1306,8 @@ select:focus {
 
 .event-card-body {
     overflow: hidden;
-    transition: max-height 0.38s cubic-bezier(.4,0,.2,1),
-                opacity    0.3s ease;
+    transition: max-height 0.38s cubic-bezier(.4, 0, .2, 1),
+        opacity 0.3s ease;
 }
 
 /* En desktop siempre visible sin transición */
@@ -1335,7 +1337,8 @@ select:focus {
    ============================================================ */
 #back-to-top {
     position: fixed;
-    bottom: 90px;    /* encima del bottom nav en móvil */
+    bottom: 90px;
+    /* encima del bottom nav en móvil */
     left: 16px;
     z-index: 48;
     width: 40px;
@@ -1344,7 +1347,7 @@ select:focus {
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(8px);
     border: 1.5px solid var(--color-gold-light);
-    box-shadow: 0 3px 14px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1);
     color: var(--color-gold-dark);
     cursor: pointer;
     display: flex;
@@ -1362,7 +1365,9 @@ select:focus {
     transform: translateY(0);
 }
 
-#back-to-top:active { transform: scale(0.9); }
+#back-to-top:active {
+    transform: scale(0.9);
+}
 
 @media (min-width: 768px) {
     #back-to-top {
@@ -1379,8 +1384,15 @@ select:focus {
 }
 
 @keyframes dotPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,106,0.5); }
-    50%       { box-shadow: 0 0 0 8px rgba(212,175,106,0); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(212, 175, 106, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgba(212, 175, 106, 0);
+    }
 }
 
 /* ============================================================
@@ -1404,4 +1416,190 @@ select:focus {
     justify-content: center;
     border: 1.5px solid white;
     line-height: 1;
+}
+
+/* ============================================================
+   MEJORA 1: PRELOADER (Monograma animado)
+   ============================================================ */
+@keyframes drawStroke {
+    0% {
+        stroke-dashoffset: 200;
+        fill: transparent;
+    }
+
+    50% {
+        stroke-dashoffset: 0;
+        fill: transparent;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        fill: var(--color-gold);
+        stroke: transparent;
+    }
+}
+
+.animate-draw {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: drawStroke 2.5s ease forwards;
+}
+
+/* ============================================================
+   MEJORA 2: GALLERY MASONRY & DOUBLE TAP HEART
+   ============================================================ */
+/* Usamos columnas CSS para el efecto Masonry = Pinterest */
+.photo-gallery-masonry {
+    column-count: 2;
+    column-gap: 16px;
+    padding-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+    .photo-gallery-masonry {
+        column-count: 3;
+    }
+}
+
+@media (min-width: 1024px) {
+    .photo-gallery-masonry {
+        column-count: 4;
+    }
+}
+
+.photo-gallery-masonry .photo-card {
+    break-inside: avoid;
+    margin-bottom: 16px;
+    /* espacio vertical entre cards */
+    display: block;
+    /* quitar aspect-ratio anterior */
+    height: auto;
+}
+
+.photo-gallery-masonry .photo-card img {
+    height: auto;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Animación del Corazón (Double Tap) */
+.like-heart-anim {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    color: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 20;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+}
+
+.like-heart-anim.active {
+    animation: popHeart 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popHeart {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+
+    15% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+
+    30% {
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 1;
+    }
+
+    60% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* ============================================================
+   MEJORA 3: FLOATING LABELS (Formularios Premium)
+   ============================================================ */
+.floating-input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.floating-input,
+.floating-select,
+.floating-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1.5rem 0 0.5rem 0;
+    font-size: 1rem;
+    color: var(--color-text-main);
+    outline: none;
+    transition: border-color 0.3s ease;
+    border-radius: 0;
+    /* Override iOS Safari styles */
+}
+
+.floating-input:focus,
+.floating-select:focus,
+.floating-textarea:focus {
+    border-bottom-color: var(--color-gold);
+}
+
+.floating-label {
+    position: absolute;
+    top: 1.5rem;
+    left: 0;
+    font-size: 1rem;
+    color: #9ca3af;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: left top;
+}
+
+/* Cuando el input tiene el foco, o NO mostrar su placeholder (ie. tiene valor) */
+.floating-input:focus~.floating-label,
+.floating-input:not(:placeholder-shown)~.floating-label,
+.floating-textarea:focus~.floating-label,
+.floating-textarea:not(:placeholder-shown)~.floating-label,
+.floating-select:focus~.floating-label,
+.floating-select:not([value=""])~.floating-label {
+    top: 0;
+    font-size: 0.75rem;
+    color: var(--color-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.floating-textarea {
+    resize: none;
+    min-height: 100px;
+}
+
+/* ============================================================
+   MEJORA 4: EFECTO PARALLAX
+   ============================================================ */
+/* Fallback con CSS (background-attachment no va bien en iOS, pero en desktop es rey) */
+.bg-parallax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* En móviles y tablets la mayoría desactiva bg-fixed, así que se ve normaL, lo cual es aceptable. */
+@supports (-webkit-touch-callout: none) {
+    .bg-parallax {
+        background-attachment: scroll;
+    }
 }
