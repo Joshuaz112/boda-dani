@@ -1197,3 +1197,98 @@ select:focus {
     background: rgba(37, 211, 102, 0.2);
     border-color: rgba(37, 211, 102, 0.5);
 }
+
+/* ============================================================
+   FAB MÚSICA — Botón flotante (solo móvil)
+   ============================================================ */
+.music-fab {
+    display: none;
+    /* oculto en desktop */
+    position: fixed;
+    top: 84px;
+    /* justo bajo el top nav */
+    right: 16px;
+    z-index: 50;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1.5px solid var(--color-gold-light);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    display: none;
+    /* override en mobile */
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+@media (max-width: 767px) {
+    .music-fab {
+        display: flex;
+    }
+}
+
+.music-fab:active {
+    transform: scale(0.92);
+}
+
+.music-fab.playing {
+    border-color: var(--color-gold);
+    background: rgba(255, 252, 240, 0.95);
+    box-shadow: 0 4px 18px rgba(212, 175, 106, 0.25);
+}
+
+/* Ícono de nota musical */
+.fab-icon {
+    width: 18px;
+    height: 18px;
+    stroke: var(--color-gold-dark);
+}
+
+/* Barras de música animadas (estado reproduciendo) */
+.fab-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 18px;
+}
+
+.fab-bars span {
+    display: block;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--color-gold);
+    animation: fabBar 0.8s ease-in-out infinite alternate;
+}
+
+.fab-bars span:nth-child(1) {
+    height: 10px;
+    animation-delay: 0s;
+}
+
+.fab-bars span:nth-child(2) {
+    height: 18px;
+    animation-delay: 0.2s;
+}
+
+.fab-bars span:nth-child(3) {
+    height: 7px;
+    animation-delay: 0.4s;
+}
+
+@keyframes fabBar {
+    from {
+        transform: scaleY(0.4);
+    }
+
+    to {
+        transform: scaleY(1);
+    }
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,11 +1,6 @@
 /**
  * navigation.js
- * Lógica de navegación SPA (Single Page Application):
- *  - Carga dinámica de vistas desde pages/*.html (fetch)
- *  - Cambiar entre vistas (home, album, invitation)
- *  - Mostrar/ocultar menú móvil
- *  - Pantalla de bienvenida
- *  - Control de música de fondo
+ * SPA navigation + música + FAB móvil + bottom nav sync
  */
 
 // ──────────────────────────────────────────────────────────────
@@ -15,11 +10,13 @@ const mainNav = document.getElementById('main-nav');
 const welcomeScreen = document.getElementById('welcome-screen');
 const openBtn = document.getElementById('open-invitation');
 const bgMusic = document.getElementById('bg-music');
-const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-const mobileMenu = document.getElementById('mobile-menu');
 const musicToggleDesktop = document.getElementById('music-toggle');
-const musicToggleMobile = document.getElementById('mobile-music-toggle');
 const musicAnimation = document.getElementById('music-animation');
+
+// FAB música (móvil)
+const musicFab = document.getElementById('music-fab');
+const fabIconNote = document.getElementById('fab-icon-note');
+const fabMusicBars = document.getElementById('fab-music-bars');
 
 let isPlaying = false;
 
@@ -36,14 +33,7 @@ const loadedPages = {};
 // ──────────────────────────────────────────────────────────────
 // 1. Carga dinámica de contenido
 // ──────────────────────────────────────────────────────────────
-
-/**
- * Carga el fragmento HTML de una vista desde pages/*.html
- * si aún no ha sido cargado, y lo inyecta en el contenedor.
- * @param {string} viewId - 'home' | 'album' | 'invitation'
- */
 async function loadPage(viewId) {
-    // Si ya está cargado, no hacer nada
     if (loadedPages[viewId]) return;
 
     const url = PAGE_MAP[viewId];
@@ -56,9 +46,6 @@ async function loadPage(viewId) {
         if (container) {
             container.innerHTML = html;
             loadedPages[viewId] = true;
-
-            // Disparar scripts de inicialización que dependen del DOM
-            // de esta vista (p.ej. countdown, Firebase, reveal observer)
             if (viewId === 'home') onHomeLoaded();
             if (viewId === 'album') onAlbumLoaded();
             if (viewId === 'invitation') onInvitationLoaded();
@@ -70,38 +57,36 @@ async function loadPage(viewId) {
 
 /**
  * Hooks llamados después de que cada página es inyectada en el DOM.
- * Aquí se pueden re-inicializar cosas que dependan del contenido.
  */
 function onHomeLoaded() {
-    // Reiniciar observer de scroll reveal si existe
-    if (typeof initReveal === 'function') initReveal();
-    // Reiniciar countdown si existe
+    // Countdown
     if (typeof initCountdown === 'function') initCountdown();
-    // Reiniciar guestbook si existe
-    if (typeof initGuestbook === 'function') initGuestbook();
+    // Guestbook
+    if (typeof window.initGuestbook === 'function') window.initGuestbook();
+
+    // Reveal animation observer
+    const revealEls = document.querySelectorAll('.reveal');
+    if (revealEls.length) {
+        const obs = new IntersectionObserver(
+            entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+            { threshold: 0.15 }
+        );
+        revealEls.forEach(el => obs.observe(el));
+    }
 }
 
 function onAlbumLoaded() {
-    // Reiniciar galería de fotos si existe
-    if (typeof initGallery === 'function') initGallery();
-    if (typeof loadPhotos === 'function') loadPhotos();
+    if (typeof window.initGallery === 'function') window.initGallery();
 }
 
 function onInvitationLoaded() {
-    // Reiniciar formulario RSVP si existe
-    if (typeof initRsvp === 'function') initRsvp();
+    if (typeof window.initRsvp === 'function') window.initRsvp();
 }
 
 // ──────────────────────────────────────────────────────────────
 // 2. Cambio de Vista (SPA)
 // ──────────────────────────────────────────────────────────────
-
-/**
- * Carga (si es necesario) y muestra la vista solicitada.
- * @param {string} viewId - 'home' | 'album' | 'invitation'
- */
 window.switchView = async function (viewId) {
-    // Primero cargar el contenido si aún no está
     await loadPage(viewId);
 
     // Ocultar todas las vistas
@@ -119,23 +104,21 @@ window.switchView = async function (viewId) {
     const targetView = document.getElementById('view-' + viewId);
     if (!targetView) return;
     targetView.style.display = 'block';
+    requestAnimationFrame(() => targetView.classList.add('active'));
 
-    // Pequeño delay para que la transición CSS funcione
-    requestAnimationFrame(() => {
-        targetView.classList.add('active');
+    // Marcar enlace activo (top nav desktop)
+    document.querySelectorAll(`.nav-link[data-target="${viewId}"]`).forEach(el => el.classList.add('active'));
+
+    // ★ Sincronizar bottom nav activo
+    document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === viewId);
     });
 
-    // Marcar enlace activo en el nav
-    document.querySelectorAll(`.nav-link[data-target="${viewId}"]`).forEach(el => {
-        el.classList.add('active');
-    });
-
-    // Scroll al tope de la vista
     targetView.scrollTo(0, 0);
 };
 
 // ──────────────────────────────────────────────────────────────
-// 3. Carga inicial — precargar la vista "home" al arrancar
+// 3. Carga inicial
 // ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     loadPage('home');
@@ -145,47 +128,67 @@ document.addEventListener('DOMContentLoaded', () => {
 // 4. Pantalla de bienvenida
 // ──────────────────────────────────────────────────────────────
 openBtn.addEventListener('click', () => {
-    // Fade-out pantalla de bienvenida
     welcomeScreen.classList.add('opened');
     setTimeout(() => {
         welcomeScreen.style.display = 'none';
-        document.body.style.overflow = ''; // Restaurar scroll
-        mainNav.classList.remove('translate-y-[-100%]'); // Bajar nav
+        document.body.style.overflow = '';
+        mainNav.classList.remove('translate-y-[-100%]');
     }, 1000);
 
     // Intentar reproducir música
     bgMusic.volume = 0.4;
     bgMusic.play()
-        .then(() => { isPlaying = true; })
-        .catch(() => { /* El usuario bloqueó el audio automático */ });
+        .then(() => { isPlaying = true; updateMusicUI(); })
+        .catch(() => { /* autoplay bloqueado */ });
 });
 
 // ──────────────────────────────────────────────────────────────
-// 5. Menú Móvil
+// 5. Menú Móvil — ya no se usa (bottom-nav lo reemplaza)
+//    Mantenemos la función para no romper posibles referencias.
 // ──────────────────────────────────────────────────────────────
-mobileMenuBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('open');
-});
-
-/** Cierra el menú móvil (llamado desde los botones del menú). */
-window.closeMobileMenu = () => {
-    mobileMenu.classList.remove('open');
-};
+window.closeMobileMenu = () => { /* no-op */ };
 
 // ──────────────────────────────────────────────────────────────
 // 6. Control de Música
 // ──────────────────────────────────────────────────────────────
-function toggleMusic() {
-    if (isPlaying) {
-        bgMusic.pause();
-        if (musicAnimation) musicAnimation.style.opacity = '0.3';
-        isPlaying = false;
-    } else {
-        bgMusic.play().catch(() => { });
-        if (musicAnimation) musicAnimation.style.opacity = '1';
-        isPlaying = true;
+
+/** Actualiza TODOS los indicadores visuales de música */
+function updateMusicUI() {
+    // ── Desktop: barras animadas en el nav ──
+    if (musicAnimation) {
+        musicAnimation.style.opacity = isPlaying ? '1' : '0.3';
+    }
+
+    // ── Móvil FAB: alterna nota ↔ barras ──
+    if (fabIconNote && fabMusicBars) {
+        if (isPlaying) {
+            fabIconNote.classList.add('hidden');
+            fabMusicBars.classList.remove('hidden');
+        } else {
+            fabIconNote.classList.remove('hidden');
+            fabMusicBars.classList.add('hidden');
+        }
+    }
+
+    // ── Clases en el FAB ──
+    if (musicFab) {
+        musicFab.classList.toggle('playing', isPlaying);
     }
 }
 
+function toggleMusic() {
+    if (isPlaying) {
+        bgMusic.pause();
+        isPlaying = false;
+    } else {
+        bgMusic.play().catch(() => { });
+        isPlaying = true;
+    }
+    updateMusicUI();
+}
+
+// Conectar botón desktop
 musicToggleDesktop?.addEventListener('click', toggleMusic);
-musicToggleMobile?.addEventListener('click', toggleMusic);
+
+// Conectar FAB móvil
+musicFab?.addEventListener('click', toggleMusic);
