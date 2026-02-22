@@ -123,6 +123,8 @@ function openLightbox(index) {
 
 function renderLightbox(lb) {
     const total = photoUrls.length;
+    const url = photoUrls[currentLbIndex];
+
     lb.innerHTML = `
         <button class="lb-close" title="Cerrar (Esc)">✕</button>
 
@@ -138,30 +140,66 @@ function renderLightbox(lb) {
             </svg>
         </button>` : ''}
 
-        <img src="${photoUrls[currentLbIndex]}" alt="Foto boda Felipe & Daniela">
+        <img src="${url}" alt="Foto boda Felipe & Daniela">
 
-        ${total > 1 ? `<div class="lb-counter">${currentLbIndex + 1} / ${total}</div>` : ''}
+        <!-- Barra inferior: contador + acciones -->
+        <div class="lb-bottom-bar">
+            <span class="lb-counter-inline">${total > 1 ? `${currentLbIndex + 1} / ${total}` : '1 foto'}</span>
+            <div class="lb-actions">
+                <!-- Descargar -->
+                <button class="lb-action-btn js-lb-download" title="Descargar foto">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <span>Descargar</span>
+                </button>
+                <!-- Compartir WhatsApp -->
+                <button class="lb-action-btn lb-whatsapp js-lb-share" title="Compartir por WhatsApp">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.555 4.118 1.528 5.849L.057 23.982l6.306-1.453A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-4.964-1.345l-.356-.214-3.667.845.908-3.564-.232-.368A9.818 9.818 0 1112 21.818z"/>
+                    </svg>
+                    <span>Compartir</span>
+                </button>
+            </div>
+        </div>
     `;
 
     // Eventos
-    lb.querySelector('.lb-close')?.addEventListener('click', () => {
-        lb.remove();
-        document.onkeydown = null;
-    });
-    lb.querySelector('.lb-prev')?.addEventListener('click', (e) => {
+    lb.querySelector('.lb-close').addEventListener('click', () => { lb.remove(); document.onkeydown = null; });
+    lb.querySelector('.lb-prev')?.addEventListener('click', e => { e.stopPropagation(); navigateLightbox(lb, -1); });
+    lb.querySelector('.lb-next')?.addEventListener('click', e => { e.stopPropagation(); navigateLightbox(lb, +1); });
+
+    // Descargar
+    lb.querySelector('.js-lb-download')?.addEventListener('click', async (e) => {
         e.stopPropagation();
-        navigateLightbox(lb, -1);
+        try {
+            const resp = await fetch(url);
+            const blob = await resp.blob();
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `boda-felipe-daniela-${currentLbIndex + 1}.jpg`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+            window.showToast?.('Foto descargada ✓', 'success', 2500);
+        } catch {
+            window.showToast?.('No se pudo descargar la foto.', 'error');
+        }
     });
-    lb.querySelector('.lb-next')?.addEventListener('click', (e) => {
+
+    // Compartir WhatsApp
+    lb.querySelector('.js-lb-share')?.addEventListener('click', (e) => {
         e.stopPropagation();
-        navigateLightbox(lb, +1);
+        const msg = encodeURIComponent(`¡Mira esta foto de la boda de Felipe & Daniela! 🎊\n${url}`);
+        window.open(`https://wa.me/?text=${msg}`, '_blank');
     });
 
     // Clic en fondo cierra
-    lb.addEventListener('click', (e) => {
-        if (e.target === lb) { lb.remove(); document.onkeydown = null; }
-    });
+    lb.addEventListener('click', e => { if (e.target === lb) { lb.remove(); document.onkeydown = null; } });
 }
+
 
 function navigateLightbox(lb, dir) {
     currentLbIndex = (currentLbIndex + dir + photoUrls.length) % photoUrls.length;

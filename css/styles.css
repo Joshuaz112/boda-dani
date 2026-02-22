@@ -939,4 +939,261 @@ select:focus {
     #cursor-dot {
         display: none;
     }
+
+    /* Espacio extra en el fondo para el bottom nav */
+    .view-section {
+        padding-bottom: 80px;
+    }
+}
+
+/* ============================================================
+   TIMELINE — Nuestra Historia
+   ============================================================ */
+.timeline {
+    position: relative;
+    padding-left: 32px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom,
+            transparent,
+            var(--color-gold-light) 10%,
+            var(--color-gold) 50%,
+            var(--color-gold-light) 90%,
+            transparent);
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -28px;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--color-gold);
+    z-index: 1;
+}
+
+.timeline-dot-heart {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: white;
+}
+
+.timeline-content {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 24px;
+    border: 1px solid #f0ebe2;
+    border-left: 3px solid var(--color-gold-light);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-content:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.timeline-content-highlight {
+    border-left-color: var(--color-gold);
+    background: linear-gradient(135deg, #fffdf9, white);
+}
+
+.timeline-year {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--color-text-muted);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.timeline-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin-bottom: 6px;
+}
+
+.timeline-text {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+@media (min-width: 640px) {
+    .timeline {
+        padding-left: 48px;
+    }
+
+    .timeline::before {
+        left: 16px;
+    }
+
+    .timeline-dot {
+        left: -38px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* ============================================================
+   BOTTOM NAV MÓVIL
+   ============================================================ */
+.bottom-nav {
+    display: none;
+    /* oculto por defecto (escritorio) */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 49;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    padding: 6px 0 env(safe-area-inset-bottom, 6px);
+    justify-content: space-around;
+    align-items: center;
+}
+
+@media (max-width: 767px) {
+    .bottom-nav {
+        display: flex;
+    }
+}
+
+.bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 4px;
+    background: none;
+    border: none;
+    color: #b0a898;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.25s ease;
+}
+
+.bottom-nav-item.active {
+    color: var(--color-gold-dark);
+}
+
+.bottom-nav-item svg {
+    transition: stroke 0.25s ease, transform 0.2s ease;
+}
+
+.bottom-nav-item.active svg {
+    stroke: var(--color-gold);
+    transform: scale(1.1);
+}
+
+.bottom-nav-item:active svg {
+    transform: scale(0.9);
+}
+
+/* ============================================================
+   BOTÓN COPIAR (mesa de regalos)
+   ============================================================ */
+.copy-btn {
+    background: none;
+    border: none;
+    color: #c8beae;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s, background 0.2s;
+    flex-shrink: 0;
+}
+
+.copy-btn:hover {
+    color: var(--color-gold-dark);
+    background: rgba(212, 175, 106, 0.1);
+}
+
+/* ============================================================
+   LIGHTBOX — Barra inferior (descarga + share)
+   ============================================================ */
+.lb-bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+}
+
+.lb-counter-inline {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+}
+
+.lb-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.lb-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: white;
+    padding: 7px 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: .08em;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    text-transform: uppercase;
+}
+
+.lb-action-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.lb-whatsapp:hover {
+    background: rgba(37, 211, 102, 0.2);
+    border-color: rgba(37, 211, 102, 0.5);
 }
